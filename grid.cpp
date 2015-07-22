@@ -1,5 +1,6 @@
 #include <fstream>
 #include <GL/gl.h>
+#include <GL/glut.h>
 #include <string>
 #include <vector>
 
@@ -65,86 +66,90 @@ void grid::initGrid(GLint _width, GLint _height, GLint** settingArray)
 void grid::initFromPlainText(string filename, int borderWidth)
 {
    ifstream fin;
-   if(fin.open(filename);
-   string currentString;
-   do
+   fin.open(filename);
+   if(fin.good())
    {
-      getline(fin, currentString);
-   }
-   while(currentString[0] == '!');
+      string currentString;
+      do
+      {
+         getline(fin, currentString);
+      }
+      while(currentString[0] == '!');
 
-   string lineOfBody = currentString; //that is, the first row of cells
+      string lineOfBody = currentString; //that is, the first row of cells
 
-   vector<string> body;
+      vector<string> body;
 
-   body.push_back(lineOfBody);
-
-   int rowNumber = 0;
-   while(!fin.eof())
-   {
-      getline(fin, lineOfBody);
       body.push_back(lineOfBody);
-      rowNumber++;
-   }
 
-   height = rowNumber + borderWidth * 2;
-
-   unsigned int maxWidth = body[0].length();
-   for(unsigned int i = 1; i < body.size(); i++)
-   {
-      if(body[i].length() > maxWidth)
+      int rowNumber = 0;
+      while(!fin.eof())
       {
-         maxWidth = body[i].length();
+         getline(fin, lineOfBody);
+         body.push_back(lineOfBody);
+         rowNumber++;
       }
-   }
-   width = maxWidth + borderWidth * 2;
 
-   grd.resize(height);
 
-   for(int i = 0; i < height; i++)
-   {
-      grd[i].resize(width);
-   }
+      height = rowNumber + borderWidth * 2;
 
-   for(int i = 0; i < height; i++)
-   {
-      for(int j = 0; j < width; j++)
+      unsigned int maxWidth = body[0].length();
+      for(unsigned int i = 1; i < body.size(); i++)
       {
-         grd[i][j].setStatus(DEAD);
-      }
-   }
-
-   fstream fout;
-   fout.open("out.txt");
-
-   for(unsigned int i = 0; i < body.size(); i++)
-   {
-      for(unsigned int j = 0; j < body[i].length(); j++)
-      {
-         if(body[i][j] != '.')
+         if(body[i].length() > maxWidth)
          {
-            grd[i + borderWidth][j + borderWidth].setStatus(ALIVE);
+            maxWidth = body[i].length();
          }
       }
-      fout<<body.size()<<"\n";
-   }
+      width = maxWidth + borderWidth * 2;
 
-   // for(int i = 0; i < height; i++)
-   // {
-   //    for(int j = 0; j < width; j++)
-   //    {
-   //       if(grd[i][j].getStatus() == ALIVE)
-   //       {
-   //          fout<<"1";
-   //       }
-   //       else
-   //       {
-   //          fout<<"0";
-   //       }
-   //    }
-   //    fout<<"\n";
-   // }
-   fout.close();
+
+      grd.resize(height);
+
+      for(int i = 0; i < height; i++)
+      {
+         grd[i].resize(width);
+      }
+
+      for(int i = 0; i < height; i++)
+      {
+         for(int j = 0; j < width; j++)
+         {
+            grd[i][j].setStatus(DEAD);
+         }
+      }
+
+
+      for(unsigned int i = 0; i < body.size(); i++)
+      {
+         for(unsigned int j = 0; j < body[i].length(); j++)
+         {
+            if(body[i][j] != '.')
+            {
+               grd[i + borderWidth][j + borderWidth].setStatus(ALIVE);
+            }
+         }
+      }
+   }
+   else
+   {
+      height = 25;
+      width = 80;
+      grd.resize(height);
+
+      for(int i = 0; i < height; i++)
+      {
+         grd[i].resize(width);
+      }
+
+      for(int i = 0; i < height; i++)
+      {
+         for(int j = 0; j < width; j++)
+         {
+            grd[i][j].setStatus(DEAD);
+         }
+      }
+   }
 }
 
 int grid::getWidth()
@@ -159,6 +164,18 @@ int grid::getHeight()
 
 void grid::draw()
 {
+   // float cellWidth;
+   // if(glutGet(GLUT_WINDOW_WIDTH) > glutGet(GLUT_WINDOW_HEIGHT))
+   // {
+   //    if(width > height)
+   //    {
+         
+   //    }
+   // }
+   // else
+   // {
+      
+   // }
    for(GLint i = 0; i < height; i++)
    {
       for(GLint j = 0; j < width; j++)
