@@ -27,6 +27,38 @@ GLint grid::findNeighbours(GLint x, GLint y)
    return neighbours;
 }
 
+void grid::initColor()
+{
+   cellColor = {0.0f, 0.0f, 0.0f};
+   spaceColor = {1.0f, 1.0f, 1.0f};
+   ifstream fin("settings/colorTheme");
+   if(fin.good())
+   {
+      fin>>cellColor[0];
+   }
+   if(fin.good())
+   {
+      fin>>cellColor[1];
+   }
+   if(fin.good())
+   {
+      fin>>cellColor[2];
+   }
+   if(fin.good())
+   {
+      fin>>spaceColor[0];
+   }
+   if(fin.good())
+   {
+      fin>>spaceColor[1];
+   }
+   if(fin.good())
+   {
+      fin>>spaceColor[2];
+   }
+   fin.close();
+}
+
 grid::grid()
 {
 
@@ -63,8 +95,9 @@ void grid::initGrid(GLint _width, GLint _height, GLint** settingArray)
    }
 }
 
-void grid::initFromPlainText(string filename, int borderWidth)
+void grid::initFromPlainText(string filename, GLint borderWidth)
 {
+   initColor();
    ifstream fin;
    fin.open(filename);
    if(fin.good())
@@ -90,7 +123,6 @@ void grid::initFromPlainText(string filename, int borderWidth)
          rowNumber++;
       }
 
-
       height = rowNumber + borderWidth * 2;
 
       unsigned int maxWidth = body[0].length();
@@ -103,6 +135,7 @@ void grid::initFromPlainText(string filename, int borderWidth)
       }
       width = maxWidth + borderWidth * 2;
 
+      cellWidth = 10;
 
       grd.resize(height);
 
@@ -150,6 +183,12 @@ void grid::initFromPlainText(string filename, int borderWidth)
          }
       }
    }
+   fin.close();
+}
+
+void grid::setCellWidth(GLfloat w)
+{
+   cellWidth = w;
 }
 
 int grid::getWidth()
@@ -164,30 +203,19 @@ int grid::getHeight()
 
 void grid::draw()
 {
-   // float cellWidth;
-   // if(glutGet(GLUT_WINDOW_WIDTH) > glutGet(GLUT_WINDOW_HEIGHT))
-   // {
-   //    if(width > height)
-   //    {
-         
-   //    }
-   // }
-   // else
-   // {
-      
-   // }
+   glClearColor(spaceColor[0] / 256, spaceColor[1] / 256, spaceColor[2] / 256, 1.0f);
    for(GLint i = 0; i < height; i++)
    {
       for(GLint j = 0; j < width; j++)
       {
          if(grd[i][j].getStatus() == ALIVE)
          {
-            glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+            glColor4f(cellColor[0] / 256, cellColor[1] / 256, cellColor[2] / 256, 1.0f);
             glBegin(GL_POLYGON);
-            glVertex2f( -1 + j * (2.0 / width), -1 +  i * (2.0 / height));
-            glVertex2f( -1 + (j + 1) * (2.0 / width), -1 +  i * (2.0 / height));
-            glVertex2f( -1 + (j + 1) * (2.0 / width), -1 + (i + 1) * (2.0 / height));
-            glVertex2f( -1 + j * (2.0 / width), -1 + (i + 1) * (2.0 / height));
+               glVertex2f(j * cellWidth, i * cellWidth);
+               glVertex2f((j + 1) * cellWidth, i * cellWidth);
+               glVertex2f((j + 1) * cellWidth, (i + 1) * cellWidth);
+               glVertex2f(j * cellWidth, (i + 1) * cellWidth);
             glEnd();
          }
       }
