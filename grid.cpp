@@ -212,10 +212,12 @@ void grid::draw()
          {
             glColor4f(cellColor[0] / 256, cellColor[1] / 256, cellColor[2] / 256, 1.0f);
             glBegin(GL_POLYGON);
-               glVertex2f(j * cellWidth, i * cellWidth);
-               glVertex2f((j + 1) * cellWidth, i * cellWidth);
-               glVertex2f((j + 1) * cellWidth, (i + 1) * cellWidth);
-               glVertex2f(j * cellWidth, (i + 1) * cellWidth);
+               GLfloat x = j - width / 2;
+               GLfloat y = i - height / 2;
+               glVertex2f(x * cellWidth, y * cellWidth);
+               glVertex2f((x + 1) * cellWidth, y * cellWidth);
+               glVertex2f((x + 1) * cellWidth, (y + 1) * cellWidth);
+               glVertex2f(x * cellWidth, (y + 1) * cellWidth);
             glEnd();
          }
       }

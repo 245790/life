@@ -43,8 +43,8 @@ int main (int argc, char **argv)
       // field.initRandom(fieldWidth, fieldHeight, randomCoefficient);
    }
 
-   const int windowWidth = 640;
-   const int windowHeight = 480;
+   const int windowWidth = 700;
+   const int windowHeight = 700;
 
    if(windowWidth > windowHeight)
    {
@@ -57,7 +57,7 @@ int main (int argc, char **argv)
 
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
-   glutInitWindowSize(800, 600);
+   glutInitWindowSize(windowWidth, windowHeight);
    glutCreateWindow("Conway's Game of Life");
    glutDisplayFunc(renderScene);
    glutReshapeFunc(changeSize);
@@ -93,7 +93,7 @@ void changeSize(GLsizei w, GLsizei h)
    glViewport(0, 0, w, h);
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   gluOrtho2D(0, w, 0, h);
+   gluOrtho2D(-w / 2, w / 2, -h / 2, h / 2);
 }
 
 void timerFunction(GLint value)
