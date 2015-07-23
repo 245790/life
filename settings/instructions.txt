@@ -1,0 +1,2 @@
+All the files in this can be opened with any text editor.
+"colorTheme" file stores the colors of dead and alive cells. The first three numbers are numbers from 0 to 256 that represent a color of alive cell. The other three are a space color.

@@ -20,9 +20,8 @@ private:
 public:
    grid();
    void initGrid(GLint _width, GLint _height);
-   void initGrid(GLint _width, GLint _height, GLint** settingArray);
    void initFromPlainText(string filename, GLint borderWidth);
-   void initRandom(GLint _width, GLint _height, GLfloat randomCoefficient);
+   void initRandom(GLint _width, GLint _height, GLfloat randomCoefficient, GLint seed);
    void setCellWidth(GLfloat w);
    int getWidth();
    int getHeight();

@@ -32,15 +32,18 @@ int main (int argc, char **argv)
    }
    else
    {
-      // int fieldWidth, fieldHeight;
-      // cout<<"\nEnter field width: ";
-      // cin>>fieldWidth;
-      // cout<<"\nEnter field height: ";
-      // cin>>fieldHeight;
-      // float randomCoefficient;
-      // cout<<"\nEnter randomness coefficient: ";
-      // cin>>randomCoefficient;
-      // field.initRandom(fieldWidth, fieldHeight, randomCoefficient);
+      int fieldWidth, fieldHeight;
+      cout<<"\nEnter field width: ";
+      cin>>fieldWidth;
+      cout<<"\nEnter field height: ";
+      cin>>fieldHeight;
+      float randomCoefficient;
+      cout<<"\nEnter randomness coefficient(from 0 to 1): ";
+      cin>>randomCoefficient;
+      int seed;
+      cout<<"\nEnter seed: ";
+      cin>>seed;
+      field.initRandom(fieldWidth, fieldHeight, randomCoefficient, seed);
    }
 
    const int windowWidth = 700;

@@ -1,3 +1,4 @@
+// #include <cstdlib>
 #include <fstream>
 #include <GL/gl.h>
 #include <GL/glut.h>
@@ -68,29 +69,18 @@ void grid::initGrid(GLint _width, GLint _height)
 {
    height = _height;
    width = _width;
-   // grd(_height, vector<cell>(_width));
-   cell deadCell;
-   vector<cell> allDead(width, deadCell);
-   grd.assign(height, allDead);
-}
 
-void grid::initGrid(GLint _width, GLint _height, GLint** settingArray)
-{
-   height = _height;
-   width = _width;
-   cell deadCell;
-   vector<cell> allDead(width, deadCell);
-   grd.assign(height, allDead);
-   
-   for(GLint i = 0; i < _height; i++)
+   grd.resize(height);
+   for(int i = 0; i < height; i++)
    {
-      for(GLint j = 0; j < _width; j++)
+      grd[i].resize(width);
+   }
+
+   for(int i = 0; i < height; i++)
+   {
+      for(int j = 0; j < width; j++)
       {
-         if(settingArray[i][j] == 1)
-         {
-            grd[i][j].setStatus(ALIVE);
-         }
-         //else it will be DEAD as default
+         grd[i][j].setStatus(DEAD);
       }
    }
 }
@@ -137,21 +127,7 @@ void grid::initFromPlainText(string filename, GLint borderWidth)
 
       cellWidth = 10;
 
-      grd.resize(height);
-
-      for(int i = 0; i < height; i++)
-      {
-         grd[i].resize(width);
-      }
-
-      for(int i = 0; i < height; i++)
-      {
-         for(int j = 0; j < width; j++)
-         {
-            grd[i][j].setStatus(DEAD);
-         }
-      }
-
+      initGrid(width, height);
 
       for(unsigned int i = 0; i < body.size(); i++)
       {
@@ -168,22 +144,35 @@ void grid::initFromPlainText(string filename, GLint borderWidth)
    {
       height = 25;
       width = 80;
-      grd.resize(height);
+      initGrid(width, height);
+   }
+   fin.close();
+}
 
-      for(int i = 0; i < height; i++)
+void grid::initRandom(GLint _width, GLint _height, GLfloat randomCoefficient, GLint seed)
+{
+   initGrid(_width, _height);
+   initColor();
+   srand(seed);
+   if(randomCoefficient < 0)
+   {
+      randomCoefficient = 0;
+   }
+   if(randomCoefficient > 1)
+   {
+      randomCoefficient = 1;
+   }
+   int rc = randomCoefficient * 100;
+   for(int i = 0; i < height; i++)
+   {
+      for(int j = 0; j < width; j++)
       {
-         grd[i].resize(width);
-      }
-
-      for(int i = 0; i < height; i++)
-      {
-         for(int j = 0; j < width; j++)
+         if(rand() % 100 < rc)
          {
-            grd[i][j].setStatus(DEAD);
+            grd[i][j].setStatus(ALIVE);
          }
       }
    }
-   fin.close();
 }
 
 void grid::setCellWidth(GLfloat w)
