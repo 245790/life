@@ -1,7 +1,7 @@
 FLAGS = -Wall
 CC = g++
 CFLAGS = $(FLAGS) -std=c++11
-LIBS =  -lglut -lGL
+LIBS =  -lglut -lGL -lGLU
 
 life: life.o grid.o cell.o
 	$(CC) $(CFLAGS) -o life life.o grid.o cell.o $(LIBS)

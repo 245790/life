@@ -5,10 +5,12 @@
 cell::cell()
 {
    status = DEAD;
+   cellAge = 0;
 }
 
 cell::cell(GLint _status)
 {
+   cellAge = 0;
    if(_status == 1)
    {
       status = ALIVE;
@@ -30,4 +32,22 @@ void cell::setStatus(cellStatus s)
 cellStatus cell::getStatus()
 {
    return status;
+}
+
+GLint cell::getAge()
+{
+   return cellAge;
+}
+
+void cell::incrementAge()
+{
+   if(cellAge < 3)
+   {
+      cellAge++;
+   }
+}
+
+void cell::nullifyAge()
+{
+   cellAge = 0;
 }

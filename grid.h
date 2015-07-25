@@ -1,3 +1,6 @@
+#ifndef GRID_H
+#define GRID_H
+
 #include <GL/gl.h>
 #include <string>
 #include <vector>
@@ -13,7 +16,7 @@ private:
    GLint width;
    GLint height;
    GLfloat cellWidth;
-   vector<GLfloat> cellColor;
+   vector<vector<GLfloat> > cellColor;
    vector<GLfloat> spaceColor;
    GLint findNeighbours(GLint x, GLint y);
    void initColor();
@@ -28,3 +31,4 @@ public:
    void update();
    void draw();
 };
+#endif

@@ -49,14 +49,7 @@ int main (int argc, char **argv)
    const int windowWidth = 700;
    const int windowHeight = 700;
 
-   if(windowWidth > windowHeight)
-   {
-      field.setCellWidth(windowHeight / field.getHeight());
-   }
-   else
-   {
-      field.setCellWidth(windowWidth / field.getWidth());
-   }
+   changeSize(windowWidth, windowHeight);
 
    glutInit(&argc, argv);
    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);

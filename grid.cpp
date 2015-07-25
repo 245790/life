@@ -1,4 +1,3 @@
-// #include <cstdlib>
 #include <fstream>
 #include <GL/gl.h>
 #include <GL/glut.h>
@@ -30,20 +29,26 @@ GLint grid::findNeighbours(GLint x, GLint y)
 
 void grid::initColor()
 {
-   cellColor = {0.0f, 0.0f, 0.0f};
+   cellColor = {{0.6f, 0.6f, 0.6f}, //grey
+               {0.4f, 0.4f, 0.4f}, //grey
+               {0.2f, 0.2f, 0.2f}, //blacker grey
+               {0.0f, 0.0f, 0.0f}}; //black
    spaceColor = {1.0f, 1.0f, 1.0f};
    ifstream fin("settings/colorTheme");
-   if(fin.good())
+   for(int i = 0; i < 4; i++)
    {
-      fin>>cellColor[0];
-   }
-   if(fin.good())
-   {
-      fin>>cellColor[1];
-   }
-   if(fin.good())
-   {
-      fin>>cellColor[2];
+      if(fin.good())
+      {
+         fin>>cellColor[i][0];
+      }
+      if(fin.good())
+      {
+         fin>>cellColor[i][1];
+      }
+      if(fin.good())
+      {
+         fin>>cellColor[i][2];
+      }
    }
    if(fin.good())
    {
@@ -113,10 +118,17 @@ void grid::initFromPlainText(string filename, GLint borderWidth)
          rowNumber++;
       }
 
+      unsigned int bodySize = body.size();
+
+      for(unsigned int i = 0; i < bodySize / 2; i++)
+      {
+         swap(body[i], body[bodySize - i - 1]);
+      }
+
       height = rowNumber + borderWidth * 2;
 
       unsigned int maxWidth = body[0].length();
-      for(unsigned int i = 1; i < body.size(); i++)
+      for(unsigned int i = 1; i < bodySize; i++)
       {
          if(body[i].length() > maxWidth)
          {
@@ -129,7 +141,7 @@ void grid::initFromPlainText(string filename, GLint borderWidth)
 
       initGrid(width, height);
 
-      for(unsigned int i = 0; i < body.size(); i++)
+      for(unsigned int i = 0; i < bodySize; i++)
       {
          for(unsigned int j = 0; j < body[i].length(); j++)
          {
@@ -199,10 +211,11 @@ void grid::draw()
       {
          if(grd[i][j].getStatus() == ALIVE)
          {
-            glColor4f(cellColor[0] / 256, cellColor[1] / 256, cellColor[2] / 256, 1.0f);
+            GLint age = grd[i][j].getAge();
+            glColor4f(cellColor[age][0] / 256, cellColor[age][1] / 256, cellColor[age][2] / 256, 1.0f);
             glBegin(GL_POLYGON);
-               GLfloat x = j - width / 2;
-               GLfloat y = i - height / 2;
+               GLint x = j - width / 2;
+               GLint y = i - height / 2;
                glVertex2f(x * cellWidth, y * cellWidth);
                glVertex2f((x + 1) * cellWidth, y * cellWidth);
                glVertex2f((x + 1) * cellWidth, (y + 1) * cellWidth);
@@ -235,13 +248,20 @@ void grid::update()
    {
       for(GLint j = 0; j < width; j++)
       {
+         if(grd[i][j].getStatus() == ALIVE)
+         {
+            grd[i][j].incrementAge();
+         }
          if(grd[i][j].getStatus() == WAS_DEAD)
          {
             grd[i][j].setStatus(ALIVE);
+            grd[i][j].nullifyAge();
          }
+
          if(grd[i][j].getStatus() == WAS_ALIVE)
          {
             grd[i][j].setStatus(DEAD);
+            grd[i][j].nullifyAge();
          }
       }
    }
